@@ -1,9 +1,9 @@
 import Foundation
-import lua
+@_exported import lua
 
 public class LuaSPM {
     public private(set) var version = "0.1.0"
-    public private(set) var VM: UnsafeMutablePointer<lua_State>
+    public private(set) var VM: OpaquePointer?
 
     public init() {
         VM = luaL_newstate()
@@ -31,7 +31,7 @@ public class LuaSPM {
         }
     }
     public func GetGlobalBool(s: String) throws -> Bool {
-        let type = lua_getglobal(VM, s)
+        let type = luaS_getglobal(VM, s)
         if type == LuaTypes.bool.rawValue && luaS_isboolean(VM, -1) == 1 {
             let out = lua_toboolean(VM, -1)
             luaS_pop(VM, 1)

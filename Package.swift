@@ -11,9 +11,6 @@ let package = Package(
             name: "lua",
             targets: ["lua"]),
         .library(
-            name: "luaForTesting",
-            targets: ["luaForTesting"]),
-        .library(
             name: "LuaSPM",
             targets: ["LuaSPM"]),
     ],
@@ -26,15 +23,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "lua",
-            path: "Sources/lua",
-            swiftSettings: [.unsafeFlags(["-std=c17"])]),
+            path: "Sources/swiftlua",
+            swiftSettings: [.unsafeFlags(["-llua5.3"])]),
         .target(
             name: "LuaSPM",
-            dependencies: []),
-        .target(
-            name: "luaForTesting",
-            path: "Sources/luaForTesting",
-            swiftSettings: [.unsafeFlags(["-std=c17"])]),
+            dependencies: ["lua"]),
         .testTarget(
             name: "LuaSPMTests",
             dependencies: ["LuaSPM"]),

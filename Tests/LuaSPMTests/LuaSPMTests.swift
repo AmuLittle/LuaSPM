@@ -1,5 +1,4 @@
 import XCTest
-import luaForTesting
 
 @testable import LuaSPM
 
@@ -41,12 +40,12 @@ final class LuaSPMTests: XCTestCase {
             end
             is_table = {}
         """)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_nonexistient"), LuaTypes.lua_nil.rawValue)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_nil"), LuaTypes.lua_nil.rawValue)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_bool"), LuaTypes.bool.rawValue)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_number"), LuaTypes.number.rawValue)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_string"), LuaTypes.string.rawValue)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_function"), LuaTypes.function.rawValue)
-        XCTAssertEqual(lua_getglobal(L.VM, "is_table"), LuaTypes.table.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_nonexistient"), LuaTypes.lua_nil.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_nil"), LuaTypes.lua_nil.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_bool"), LuaTypes.bool.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_number"), LuaTypes.number.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_string"), LuaTypes.string.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_function"), LuaTypes.function.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_table"), LuaTypes.table.rawValue)
     }
 }
