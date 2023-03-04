@@ -26,7 +26,9 @@ final class LuaSPMTests: XCTestCase {
             end
             is_table = {}
         """)
-        XCTAssertEqual(try L.GetGlobalBool(s: "is_bool"), true)
+        var lua_nil = LuaTypes.Nilable()
+        try L.GetGlobal("is_nil", &lua_nil)
+        XCTAssertEqual(lua_nil.is_nil, true)
     }
     func test_type_enum() throws {
         let L = LuaSPM()
@@ -40,12 +42,12 @@ final class LuaSPMTests: XCTestCase {
             end
             is_table = {}
         """)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_nonexistient"), LuaTypes.lua_nil.rawValue)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_nil"), LuaTypes.lua_nil.rawValue)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_bool"), LuaTypes.bool.rawValue)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_number"), LuaTypes.number.rawValue)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_string"), LuaTypes.string.rawValue)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_function"), LuaTypes.function.rawValue)
-        XCTAssertEqual(luaS_getglobal(L.VM, "is_table"), LuaTypes.table.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_nonexistient"), LuaTypeTable.lua_nil.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_nil"), LuaTypeTable.lua_nil.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_bool"), LuaTypeTable.bool.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_number"), LuaTypeTable.number.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_string"), LuaTypeTable.string.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_function"), LuaTypeTable.function.rawValue)
+        XCTAssertEqual(luaS_getglobal(L.VM, "is_table"), LuaTypeTable.table.rawValue)
     }
 }

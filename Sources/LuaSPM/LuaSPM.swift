@@ -30,20 +30,26 @@ public class LuaSPM {
             return false
         }
     }
-    public func GetGlobalBool(s: String) throws -> Bool {
-        let type = luaS_getglobal(VM, s)
-        if type == LuaTypes.bool.rawValue && luaS_isboolean(VM, -1) == 1 {
-            let out = lua_toboolean(VM, -1)
-            luaS_pop(VM, 1)
-            if out == 0 {
-                return false
-            }
-            else {
-                return true
-            }
+    public func CheckNil(name: String) throws -> Bool { // True if nil
+        let type = luaS_getglobal(VM, name)
+        luaS_pop(VM, 1);
+        if type == LuaTypeTable.lua_nil.rawValue {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    public func GetGlobal<T: LuaType>(_ name: String, _ output: inout T) throws { // Returns value of bool var, if var is not bool it will return varNotFound
+        let type = luaS_getglobal(VM, name)
+        if LuaTypeTable.lua_nil.rawValue == type && output is LuaTypes.Nilable {
+            output = LuaTypes.Nilable(name, true) as! T
+        }
+        else if LuaTypeTable.bool.rawValue == type && output is LuaTypes.Boolean {
+            
         }
         luaS_pop(VM, 1)
-        throw LuaSPMError.variableNotFound
+        return
     }
     public func SetGlobal<T>(s: String, v: T) {
         

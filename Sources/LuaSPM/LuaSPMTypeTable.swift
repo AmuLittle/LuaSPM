@@ -1,6 +1,7 @@
 import Foundation
 
-public enum LuaTypes: Int32 {
+public enum LuaTypeTable: Int32 {
+    case undetermined = -1
     case lua_nil = 0
     case bool = 1
     case thread = 2

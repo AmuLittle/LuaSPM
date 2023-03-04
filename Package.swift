@@ -23,8 +23,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "lua",
-            path: "Sources/swiftlua",
-            swiftSettings: [.unsafeFlags(["-llua5.3"])]),
+            path: "Sources/swiftlua"),
         .target(
             name: "LuaSPM",
             dependencies: ["lua"]),
