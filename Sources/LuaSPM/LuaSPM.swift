@@ -71,7 +71,7 @@ public class LuaSPM {
         }
         else {
             luaS_pop(VM, 1)
-            throw LuaSPMError.incompatibleTyp
+            throw LuaSPMError.incompatibleType
         }
     }
 }
