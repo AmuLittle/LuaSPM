@@ -37,6 +37,21 @@ int luaS_dofile(lua_State* L, const char* fn) {
     return luaL_dofile(L, fn);
 }
 
-int luaS_isboolean(lua_State* L, int n) {
-    return lua_isboolean(L, n);
+int luaS_isboolean(lua_State* L, int idx) {
+    return lua_isboolean(L, idx);
+}
+int luaS_isnumber(lua_State* L, int idx) {
+    return lua_isnumber(L, idx);
+}
+int luaS_isstring(lua_State* L, int idx) {
+    return lua_isstring(L, idx);
+}
+int luaS_toboolean(lua_State *L, int idx) {
+    return lua_toboolean(L, idx);
+}
+double luaS_tonumber(lua_State *L, int idx) {
+    return lua_tonumber(L, idx);
+}
+const char* luaS_tostring(lua_State *L, int idx) {
+    return lua_tostring(L, idx);
 }

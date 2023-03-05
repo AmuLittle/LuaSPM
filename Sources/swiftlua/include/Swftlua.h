@@ -19,7 +19,12 @@ int luaS_dostring(lua_State* L, const char* s);
 
 int luaS_dofile(lua_State* L, const char* fn);
 
-int luaS_isboolean(lua_State* L, int n);
+int luaS_isboolean(lua_State* L, int idx);
+int luaS_isnumber(lua_State* L, int idx);
+int luaS_isstring(lua_State* L, int idx);
+int luaS_toboolean(lua_State* L, int idx);
+double luaS_tonumber(lua_State* L, int idx);
+const char* luaS_tostring(lua_State* L, int idx);
 
 #define LUASLIB
 #endif
