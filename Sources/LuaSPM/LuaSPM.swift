@@ -45,33 +45,36 @@ public class LuaSPM {
     }
     // MakeVMBoolShared..MakeVMFuncShared make a var from lua shared with swift
     public func MakeVMBoolShared(_ path: String) throws -> LuaSPMShared.LuaBool {
+        if path.contains(".") {
+            throw LuaSPMError.notImplemented
+        }
         if luaS_getglobal(VM, path) == LuaTypeTable.bool.rawValue {
             luaS_pop(VM, 1)
             return LuaSPMShared.LuaBool(path, self)
         }
-        else {
-            luaS_pop(VM, 1)
-            throw LuaSPMError.incompatibleType
-        }
+        luaS_pop(VM, 1)
+        throw LuaSPMError.incompatibleType
     }
     public func MakeVMNumberShared(_ path: String) throws -> LuaSPMShared.LuaNumber {
+        if path.contains(".") {
+            throw LuaSPMError.notImplemented
+        }
         if luaS_getglobal(VM, path) == LuaTypeTable.number.rawValue {
             luaS_pop(VM, 1)
             return LuaSPMShared.LuaNumber(path, self)
         }
-        else {
-            luaS_pop(VM, 1)
-            throw LuaSPMError.incompatibleType
-        }
+        luaS_pop(VM, 1)
+        throw LuaSPMError.incompatibleType
     }
     public func MakeVMStringShared(_ path: String) throws -> LuaSPMShared.LuaString {
+        if path.contains(".") {
+            throw LuaSPMError.notImplemented
+        }
         if luaS_getglobal(VM, path) == LuaTypeTable.string.rawValue {
             luaS_pop(VM, 1)
             return LuaSPMShared.LuaString(path, self)
         }
-        else {
-            luaS_pop(VM, 1)
-            throw LuaSPMError.incompatibleType
-        }
+        luaS_pop(VM, 1)
+        throw LuaSPMError.incompatibleType
     }
 }
