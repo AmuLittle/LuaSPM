@@ -5,6 +5,7 @@ public enum LuaSPMError: Error {
     case noLuaInstance
     case notImplemented
     case incompatibleType
+    case badLua
 
     case unexpected(code: Int)
 }
@@ -25,8 +26,10 @@ extension LuaSPMError: CustomStringConvertible {
                 return "Could not get var from lua VM because no lua VM is specified"
             case .notImplemented:
                 return "The current operation requested could not be preformed because it has not been implemented yet"
-        case .incompatibleType:
+            case .incompatibleType:
                 return "The lua type does not match the swift type"
+            case .badLua:
+                return "Lua execution failed"
             case .unexpected(_):
                 return "An unexpected error occurred"
         }

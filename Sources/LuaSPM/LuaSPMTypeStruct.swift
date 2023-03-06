@@ -1,6 +1,7 @@
 import Foundation
 import lua
 
+postfix operator ~> // get
 infix operator ~> // get to var
 infix operator <~ // set
 
@@ -19,11 +20,10 @@ internal class LuaVarPointer {
             if !path.contains(".") {
                 luaS_getglobal(lua_instance?.VM, path)
                 let out = try fn()
-                luaS_pop(lua_instance?.VM, 1)
                 return out
             }
             else {
-                throw LuaSPMError.notImplemented
+                let location = path.split(separator: ".")
             }
         }
         else {
@@ -49,9 +49,9 @@ public struct LuaSPMShared {
         internal init(_ path: String, _ lua_instance: LuaSPM?) {
             super.init(LuaVarPointer(lua_instance, path), lua_instance)
         }
-        public func getValue() -> Bool {
+        public postfix static func ~>(_ slf: LuaBool) -> Bool {
             var out: Bool = false
-            self~>out
+            slf~>out
             return out
         }
         public static func ~>(_ slf: LuaBool, _ out: inout Bool) {
@@ -92,6 +92,7 @@ public struct LuaSPMShared {
                     }
                     luaS_pushboolean(slf.lua_instance?.VM, to_set)
                     luaS_setglobal(slf.lua_instance?.VM, slf.represents.path)
+                    luaS_pop(slf.lua_instance?.VM, 1)
                 }
             }
             do {
@@ -107,9 +108,9 @@ public struct LuaSPMShared {
         internal init(_ path: String, _ lua_instance: LuaSPM?) {
             super.init(LuaVarPointer(lua_instance, path), lua_instance)
         }
-        public func getValue() -> Double {
+        public postfix static func ~>(_ slf: LuaNumber) -> Double {
             var out: Double = 0
-            self~>out
+            slf~>out
             return out
         }
         public static func ~>(_ slf: LuaNumber, _ out: inout Double) {
@@ -135,6 +136,7 @@ public struct LuaSPMShared {
                 if luaS_isnumber(slf.lua_instance?.VM, -1) != 0 {
                     luaS_pushnumber(slf.lua_instance?.VM, var_in)
                     luaS_setglobal(slf.lua_instance?.VM, slf.represents.path)
+                    luaS_pop(slf.lua_instance?.VM, 1)
                 }
             }
             do {
@@ -150,9 +152,9 @@ public struct LuaSPMShared {
         internal init(_ path: String, _ lua_instance: LuaSPM?) {
             super.init(LuaVarPointer(lua_instance, path), lua_instance)
         }
-        public func getValue() -> String {
+        public postfix static func ~>(_ slf: LuaString) -> String {
             var out: String = ""
-            self~>out
+            slf~>out
             return out
         }
         public static func ~>(_ slf: LuaString, _ out: inout String) {
@@ -178,6 +180,7 @@ public struct LuaSPMShared {
                 if luaS_isstring(slf.lua_instance?.VM, -1) != 0 {
                     luaS_pushstring(slf.lua_instance?.VM, var_in)
                     luaS_setglobal(slf.lua_instance?.VM, slf.represents.path)
+                    luaS_pop(slf.lua_instance?.VM, 1)
                 }
             }
             do {
@@ -187,6 +190,46 @@ public struct LuaSPMShared {
                 print("\(error)")
                 exit(-1)
             }
+        }
+    }
+    public class LuaTable: LuaSPMSharedVar {
+        internal init(_ path: String, _ lua_instance: LuaSPM?) {
+            super.init(LuaVarPointer(lua_instance, path), lua_instance)
+        }
+        public func checkNil(_ idx: Int32) throws -> Bool {
+            luaS_getglobal(self.lua_instance?.VM, self.represents.path)
+            if luaS_istable(self.lua_instance?.VM, -1) == 1 {
+                luaS_rawgeti(self.lua_instance?.VM, -1, idx)
+                if luaS_isnil(self.lua_instance?.VM, -1) == 1 {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            else {
+                throw LuaSPMError.incompatibleType
+            }
+        }
+        public func checkNil(_ name: String) throws -> Bool {
+            luaS_getglobal(self.lua_instance?.VM, self.represents.path)
+            if luaS_istable(self.lua_instance?.VM, -1) == 1 {
+                if luaS_getfield(self.lua_instance?.VM, -1, name) == LuaTypeTable.lua_nil.rawValue {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            else {
+                throw LuaSPMError.incompatibleType
+            }
+        }
+        public func getBool(_ name: String) -> LuaSPMShared.LuaBool {
+            if name.contains(".") {
+
+            }
+            luaS_getglobal(self.lua_instance?.VM, self.represents.path)
         }
     }
 }

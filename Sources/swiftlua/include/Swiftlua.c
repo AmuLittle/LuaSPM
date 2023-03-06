@@ -25,8 +25,20 @@ void luaS_pop(lua_State* L, int n) {
 int luaS_getglobal(lua_State* L, const char* name) {
     return lua_getglobal(L, name); 
 }
+int luaS_getfield(lua_State* L, int idx, const char* name) {
+    return lua_getfield(L, idx, name);
+}
+void luaS_rawgeti(lua_State* L, int idx, int n) {
+    lua_rawgeti(L, idx, n);
+}
 void luaS_setglobal(lua_State* L, const char* name) {
     lua_setglobal(L, name);
+}
+void luaS_setfield(lua_State* L, int idx, const char* name) {
+    lua_setfield(L, idx, name);
+}
+void luaS_rawseti(lua_State* L, int idx, int n) {
+    lua_rawseti(L, idx, n);
 }
 
 int luaS_dostring(lua_State* L, const char* s) {
@@ -37,6 +49,9 @@ int luaS_dofile(lua_State* L, const char* fn) {
     return luaL_dofile(L, fn);
 }
 
+int luaS_isnil(lua_State* L, int idx) {
+    return lua_isnil(L, idx);
+}
 int luaS_isboolean(lua_State* L, int idx) {
     return lua_isboolean(L, idx);
 }
@@ -45,6 +60,9 @@ int luaS_isnumber(lua_State* L, int idx) {
 }
 int luaS_isstring(lua_State* L, int idx) {
     return lua_isstring(L, idx);
+}
+int luaS_istable(lua_State* L, int idx) {
+    return lua_istable(L, idx);
 }
 int luaS_toboolean(lua_State *L, int idx) {
     return lua_toboolean(L, idx);

@@ -12,27 +12,26 @@ public class LuaSPM {
     deinit {
         lua_close(VM)
     }
-    public func CompileAndRunString(_ s: String) -> Bool {
+    public func CompileAndRunString(_ s: String) throws {
         let out = lua.luaS_dostring(VM, s.cString(using: String.Encoding.utf8))
         if out == 0 {
-            return true
+            return
         }
         else {
-            return false
+            throw LuaSPMError.badLua
         }
     }
-    public func CompileAndRunFile(_ fn: String) -> Bool {
+    public func CompileAndRunFile(_ fn: String) throws {
         let out = lua.luaS_dofile(VM, fn.cString(using: String.Encoding.utf8))
         if out == 0 {
-            return true
+            return 
         }
         else {
-            return false
+            throw LuaSPMError.badLua
         }
     }
     public func CheckNil(_ name: String) -> Bool { // True if nil
         let type = luaS_getglobal(VM, name)
-        luaS_pop(VM, 1);
         if type == LuaTypeTable.lua_nil.rawValue {
             return true
         }
@@ -49,10 +48,8 @@ public class LuaSPM {
             throw LuaSPMError.notImplemented
         }
         if luaS_getglobal(VM, path) == LuaTypeTable.bool.rawValue {
-            luaS_pop(VM, 1)
             return LuaSPMShared.LuaBool(path, self)
         }
-        luaS_pop(VM, 1)
         throw LuaSPMError.incompatibleType
     }
     public func MakeVMNumberShared(_ path: String) throws -> LuaSPMShared.LuaNumber {
@@ -60,10 +57,8 @@ public class LuaSPM {
             throw LuaSPMError.notImplemented
         }
         if luaS_getglobal(VM, path) == LuaTypeTable.number.rawValue {
-            luaS_pop(VM, 1)
             return LuaSPMShared.LuaNumber(path, self)
         }
-        luaS_pop(VM, 1)
         throw LuaSPMError.incompatibleType
     }
     public func MakeVMStringShared(_ path: String) throws -> LuaSPMShared.LuaString {
@@ -71,10 +66,17 @@ public class LuaSPM {
             throw LuaSPMError.notImplemented
         }
         if luaS_getglobal(VM, path) == LuaTypeTable.string.rawValue {
-            luaS_pop(VM, 1)
             return LuaSPMShared.LuaString(path, self)
         }
-        luaS_pop(VM, 1)
+        throw LuaSPMError.incompatibleType
+    }
+    public func MakeVMTableShared(_ path: String) throws -> LuaSPMShared.LuaTable {
+        if path.contains(".") {
+            throw LuaSPMError.notImplemented
+        }
+        if luaS_getglobal(VM, path) == LuaTypeTable.table.rawValue {
+            return LuaSPMShared.LuaTable(path, self)
+        }
         throw LuaSPMError.incompatibleType
     }
 }
